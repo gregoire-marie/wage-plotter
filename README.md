@@ -8,14 +8,14 @@ Petit script Python pour explorer ~~une table de revenus annuels et projeter une
 
 - Charge une table (points discrets) avec :
   - `Chargé/an` (brut),
-  - `Salaire Brut/an` (axe x),
+  - `Brut/an` (axe x),
   - `Net Cotis./an`,
   - `Net Impôt/an`.
 - Calcule et affiche aussi :
   - `Crédit CIR + CIFRE` via la formule ci-dessous,
   - `Payé Réel/an` dérivé.
 - Figure interactive :
-  - **Haut** : séries (€ / an) vs `Salaire Brut/an` avec un **slider** + **textbox** (interpolation linéaire clamped).
+  - **Haut** : séries (€ / an) vs `Brut/an` avec un **slider** + **textbox** (interpolation linéaire clamped).
   - **Bas** : **valeur de portefeuille** sur 30 ans (rendement annuel fixe) avec contributions mensuelles + **slider de curseur temporel**.
 
 ## Légende des quantités

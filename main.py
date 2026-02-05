@@ -34,7 +34,7 @@ def load_table() -> Tuple[np.ndarray, Dict[str, np.ndarray]]:
 
     Returns:
         A tuple (perso, series):
-            - perso: shape (n,), the x-axis values (Salaire Brut/an), sorted ascending.
+            - perso: shape (n,), the x-axis values (Brut/an), sorted ascending.
             - series: mapping from column name to y-values (shape (n,)).
     """
     data = np.array(
@@ -135,7 +135,7 @@ def compute_portfolio_path(
 
 def build_interactive_plot(perso: np.ndarray, series: Dict[str, np.ndarray]) -> None:
     """Interactive figure:
-    - Top: income series vs Salaire Brut/an with slider + textbox
+    - Top: income series vs Brut/an with slider + textbox
     - Bottom: invested wealth over time (7%/y) + time slider cursor
     """
     monthly_spend = 1698.0
@@ -182,7 +182,7 @@ def build_interactive_plot(perso: np.ndarray, series: Dict[str, np.ndarray]) -> 
 
     vline = ax.axvline(x0, linestyle="--", linewidth=1.5, alpha=0.8)
 
-    ax.set_xlabel("Salaire Brut/an (x)")
+    ax.set_xlabel("Brut/an (x)")
     ax.set_ylabel("€ / an")
     ax.grid(True, alpha=0.25)
     ax.yaxis.set_major_formatter(FuncFormatter(lambda y, _pos: _fmt_euro(float(y))))
@@ -240,11 +240,11 @@ def build_interactive_plot(perso: np.ndarray, series: Dict[str, np.ndarray]) -> 
 
     slider_w = (right - left) - gap - textbox_w
 
-    # Slider 1: Salaire Brut/an (top interactions)
+    # Slider 1: Brut/an (top interactions)
     ax_slider = fig.add_axes([left, slider_y, slider_w, slider_h])
     slider = Slider(
         ax=ax_slider,
-        label="Salaire Brut/an",
+        label="Brut/an",
         valmin=perso_min,
         valmax=perso_max,
         valinit=x0,
@@ -277,7 +277,7 @@ def build_interactive_plot(perso: np.ndarray, series: Dict[str, np.ndarray]) -> 
 
     def format_values(x: float) -> str:
         vals = {name: interp_clamped(x, perso, y) for name, y in series.items()}
-        out = [f"{'Salaire Brut/an':<16}: {_fmt_euro(x)}", "-" * 32]
+        out = [f"{'Brut/an':<16}: {_fmt_euro(x)}", "-" * 32]
         for name in names:
             out.append(f"{name:<16}: {_fmt_euro(vals[name])}")
         return "\n".join(out)
