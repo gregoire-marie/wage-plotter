@@ -11,6 +11,8 @@ Petit script Python pour explorer ~~une table de revenus annuels et projeter une
   - `Brut/an` (axe x),
   - `Net Cotis./an`,
   - `Net Impôt/an`.
+  
+  Points calculables avec le [simulateur URSSAF](https://mon-entreprise.urssaf.fr/simulateurs/salaire-brut-net).
 - Calcule et affiche aussi :
   - `Crédit CIR + CIFRE` via la formule ci-dessous,
   - `Payé Réel/an` dérivé.
@@ -48,4 +50,4 @@ Petit script Python pour explorer ~~une table de revenus annuels et projeter une
 
 ### Lancer
 ```bash
-python your_script.py
+uv run main.py
