@@ -8,29 +8,29 @@ from matplotlib.ticker import FuncFormatter
 from matplotlib.widgets import Slider, TextBox
 
 
-def compute_montant_cir(*, lus_c_an: float) -> float:
+def compute_montant_cir(*, employeur_c_an: float) -> float:
     """Compute 'Montant CIR' from other quantities.
 
     Formula:
-        Montant CIR = (LUS C/an * 1.4 - 14000) * 0.3
+        Montant CIR = (Employeur C/an * 1.4 - 14000) * 0.3
 
     Args:
-        lus_c_an: LUS C/an value.
+        employeur_c_an: Employeur C/an value.
 
     Returns:
         Montant CIR value.
     """
-    return float((lus_c_an * 1.4 - 14000) * 0.3)
+    return float((employeur_c_an * 1.4 - 14000) * 0.3)
 
 
 def load_table() -> Tuple[np.ndarray, Dict[str, np.ndarray]]:
     """Load the table and return (x, series) where x is 'Perso B/an'.
 
     Notes:
-        - 'LUS CR/3ans' removed entirely.
-        - 'LUS CR/an' is NOT provided as data; it is derived as:
-              LUS CR/an = LUS C/an - Montant CIR
-        - 'Montant CIR' is computed from 'LUS C/an' via compute_montant_cir().
+        - 'Employeur CR/3ans' removed entirely.
+        - 'Employeur CR/an' is NOT provided as data; it is derived as:
+              Employeur CR/an = Employeur C/an - Montant CIR
+        - 'Montant CIR' is computed from 'Employeur C/an' via compute_montant_cir().
 
     Returns:
         A tuple (perso, series):
@@ -49,24 +49,24 @@ def load_table() -> Tuple[np.ndarray, Dict[str, np.ndarray]]:
         dtype=float,
     )
 
-    lus_c_an = data[:, 0]
+    employeur_c_an = data[:, 0]
     perso = data[:, 1]
     apres_cotis = data[:, 2]
     apres_ir = data[:, 3]
 
     montant_cir = np.array(
-        [compute_montant_cir(lus_c_an=a) for a in lus_c_an],
+        [compute_montant_cir(employeur_c_an=a) for a in employeur_c_an],
         dtype=float,
     )
-    lus_cr_an = lus_c_an - montant_cir
+    employeur_cr_an = employeur_c_an - montant_cir
 
     sort_idx = np.argsort(perso)
     perso = perso[sort_idx]
 
     series: Dict[str, np.ndarray] = {
-        "LUS C/an": lus_c_an[sort_idx],
+        "Employeur C/an": employeur_c_an[sort_idx],
         "Montant CIR": montant_cir[sort_idx],
-        "LUS CR/an": lus_cr_an[sort_idx],
+        "Employeur CR/an": employeur_cr_an[sort_idx],
         "Après cotis N/an": apres_cotis[sort_idx],
         "Après IR SN/an": apres_ir[sort_idx],
     }
@@ -189,7 +189,7 @@ def build_interactive_plot(perso: np.ndarray, series: Dict[str, np.ndarray]) -> 
 
     ax.legend(
         loc="upper left",
-        bbox_to_anchor=(0.0, 1.02),
+        bbox_to_anchor=(0.0, 1.0),
         ncol=2,
         frameon=False,
         borderaxespad=0.0,
@@ -265,6 +265,8 @@ def build_interactive_plot(perso: np.ndarray, series: Dict[str, np.ndarray]) -> 
         valstep=1.0 / 12.0,  # monthly resolution
     )
 
+    fig.suptitle("Revenus CIFRE et trajectoire d’investissement", fontsize=14, fontweight="bold")
+    fig.canvas.manager.set_window_title("Revenus & investissement")
 
     state = {"busy": False}
 
