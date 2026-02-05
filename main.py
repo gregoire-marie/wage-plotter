@@ -9,16 +9,16 @@ from matplotlib.widgets import Slider, TextBox
 
 
 def compute_montant_cir(*, employeur_c_an: float) -> float:
-    """Compute 'Montant CIR' from other quantities.
+    """Compute 'Crédit CIR + CIFRE' from other quantities.
 
     Formula:
-        Montant CIR = (Employeur C/an * 1.4 - 14000) * 0.3
+        Crédit CIR + CIFRE = (Chargé/an * 1.4 - 14000) * 0.3
 
     Args:
-        employeur_c_an: Employeur C/an value.
+        employeur_c_an: Chargé/an value.
 
     Returns:
-        Montant CIR value.
+        Crédit CIR + CIFRE value.
     """
     return float((employeur_c_an * 1.4 - 14000) * 0.3)
 
@@ -28,13 +28,13 @@ def load_table() -> Tuple[np.ndarray, Dict[str, np.ndarray]]:
 
     Notes:
         - 'Employeur CR/3ans' removed entirely.
-        - 'Employeur CR/an' is NOT provided as data; it is derived as:
-              Employeur CR/an = Employeur C/an - Montant CIR
-        - 'Montant CIR' is computed from 'Employeur C/an' via compute_montant_cir().
+        - 'Payé Réel/an' is NOT provided as data; it is derived as:
+              Payé Réel/an = Chargé/an - Crédit CIR + CIFRE
+        - 'Crédit CIR + CIFRE' is computed from 'Chargé/an' via compute_montant_cir().
 
     Returns:
         A tuple (perso, series):
-            - perso: shape (n,), the x-axis values (Perso B/an), sorted ascending.
+            - perso: shape (n,), the x-axis values (Salaire Brut/an), sorted ascending.
             - series: mapping from column name to y-values (shape (n,)).
     """
     data = np.array(
@@ -64,11 +64,11 @@ def load_table() -> Tuple[np.ndarray, Dict[str, np.ndarray]]:
     perso = perso[sort_idx]
 
     series: Dict[str, np.ndarray] = {
-        "Employeur C/an": employeur_c_an[sort_idx],
-        "Montant CIR": montant_cir[sort_idx],
-        "Employeur CR/an": employeur_cr_an[sort_idx],
-        "Après cotis N/an": apres_cotis[sort_idx],
-        "Après IR SN/an": apres_ir[sort_idx],
+        "Chargé/an": employeur_c_an[sort_idx],
+        "Crédit CIR/CIFRE": montant_cir[sort_idx],
+        "Payé Réel/an": employeur_cr_an[sort_idx],
+        "Net Cotis./an": apres_cotis[sort_idx],
+        "Net Impôt/an": apres_ir[sort_idx],
     }
     return perso, series
 
@@ -135,7 +135,7 @@ def compute_portfolio_path(
 
 def build_interactive_plot(perso: np.ndarray, series: Dict[str, np.ndarray]) -> None:
     """Interactive figure:
-    - Top: income series vs Perso B/an with slider + textbox
+    - Top: income series vs Salaire Brut/an with slider + textbox
     - Bottom: invested wealth over time (7%/y) + time slider cursor
     """
     monthly_spend = 1698.0
@@ -182,7 +182,7 @@ def build_interactive_plot(perso: np.ndarray, series: Dict[str, np.ndarray]) -> 
 
     vline = ax.axvline(x0, linestyle="--", linewidth=1.5, alpha=0.8)
 
-    ax.set_xlabel("Perso B/an (x)")
+    ax.set_xlabel("Salaire Brut/an (x)")
     ax.set_ylabel("€ / an")
     ax.grid(True, alpha=0.25)
     ax.yaxis.set_major_formatter(FuncFormatter(lambda y, _pos: _fmt_euro(float(y))))
@@ -240,11 +240,11 @@ def build_interactive_plot(perso: np.ndarray, series: Dict[str, np.ndarray]) -> 
 
     slider_w = (right - left) - gap - textbox_w
 
-    # Slider 1: Perso B/an (top interactions)
+    # Slider 1: Salaire Brut/an (top interactions)
     ax_slider = fig.add_axes([left, slider_y, slider_w, slider_h])
     slider = Slider(
         ax=ax_slider,
-        label="Perso B/an",
+        label="Salaire Brut/an",
         valmin=perso_min,
         valmax=perso_max,
         valinit=x0,
@@ -277,7 +277,7 @@ def build_interactive_plot(perso: np.ndarray, series: Dict[str, np.ndarray]) -> 
 
     def format_values(x: float) -> str:
         vals = {name: interp_clamped(x, perso, y) for name, y in series.items()}
-        out = [f"{'Perso B/an':<16}: {_fmt_euro(x)}", "-" * 32]
+        out = [f"{'Salaire Brut/an':<16}: {_fmt_euro(x)}", "-" * 32]
         for name in names:
             out.append(f"{name:<16}: {_fmt_euro(vals[name])}")
         return "\n".join(out)
@@ -327,11 +327,11 @@ def build_interactive_plot(perso: np.ndarray, series: Dict[str, np.ndarray]) -> 
 
         # Update bottom panel (needs current apres_ir from x slider)
         x = float(slider.val)
-        apres_ir = interp_clamped(x, perso, series["Après IR SN/an"])
+        apres_ir = interp_clamped(x, perso, series["Net Impôt/an"])
         inv_text_obj.set_text(format_investment_values(apres_ir=apres_ir, t_pick=t_pick, v_pick=v_pick))
 
     def update_investment_curve(x: float) -> None:
-        apres_ir = interp_clamped(x, perso, series["Après IR SN/an"])
+        apres_ir = interp_clamped(x, perso, series["Net Impôt/an"])
         annual_savings = max(0.0, float(apres_ir) - annual_spend)
 
         t, v = compute_portfolio_path(

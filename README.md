@@ -7,15 +7,15 @@ Petit script Python pour explorer ~~une table de revenus annuels et projeter une
 ## Fonctionnalités
 
 - Charge une table (points discrets) avec :
-  - `Employeur C/an` (brut),
-  - `Perso B/an` (axe x),
-  - `Après cotis N/an`,
-  - `Après IR SN/an`.
+  - `Chargé/an` (brut),
+  - `Salaire Brut/an` (axe x),
+  - `Net Cotis./an`,
+  - `Net Impôt/an`.
 - Calcule et affiche aussi :
-  - `Montant CIR` via la formule ci-dessous,
-  - `Employeur CR/an` dérivé.
+  - `Crédit CIR + CIFRE` via la formule ci-dessous,
+  - `Payé Réel/an` dérivé.
 - Figure interactive :
-  - **Haut** : séries (€ / an) vs `Perso B/an` avec un **slider** + **textbox** (interpolation linéaire clamped).
+  - **Haut** : séries (€ / an) vs `Salaire Brut/an` avec un **slider** + **textbox** (interpolation linéaire clamped).
   - **Bas** : **valeur de portefeuille** sur 30 ans (rendement annuel fixe) avec contributions mensuelles + **slider de curseur temporel**.
 
 ## Légende des quantités
@@ -28,10 +28,10 @@ Petit script Python pour explorer ~~une table de revenus annuels et projeter une
 
 ## Définitions / formules
 
-- **Montant CIR** :
-  - `Montant CIR = (Employeur C/an * 1.4 - 14000) * 0.3`
-- **Employeur CR/an** :
-  - `Employeur CR/an = Employeur C/an - Montant CIR`
+- **Crédit CIR + CIFRE** :
+  - `Crédit CIR + CIFRE = (Chargé/an * 1.4 - 14000) * 0.3`
+- **Payé Réel/an** :
+  - `Payé Réel/an = Chargé/an - Crédit CIR + CIFRE`
 - **Épargne annuelle** (utilisée pour l’investissement) :
   - `Épargne/an = max(0, Après IR SN/an - Dépenses/an)`
 - Hypothèses investissement :
