@@ -2,6 +2,8 @@
 
 Petit script Python (single-file) pour explorer une table de revenus annuels et projeter une trajectoire d’investissement à partir de l’épargne estimée.
 
+![Aperçu](examples/example.png)
+
 ## Fonctionnalités
 
 - Charge une table (points discrets) avec :
