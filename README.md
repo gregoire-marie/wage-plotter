@@ -1,6 +1,6 @@
 # Graphique interactif de revenus CIFRE et trajectoire d'investissement
 
-Petit script Python (single-file) pour explorer une table de revenus annuels et projeter une trajectoire d’investissement à partir de l’épargne estimée.
+Petit script Python (single-file) pour explorer ~~une table de revenus annuels et projeter une trajectoire d’investissement à partir de l’épargne estimée~~ le dépit d'une thèse CIFRE.
 
 ![Aperçu](examples/example.png)
 
